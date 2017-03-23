@@ -1,0 +1,198 @@
+//El cifrado de Vigenere funciona mediante sustitución por desplazamiento de k caracteres en el texto, con la diferencia respecto al cifrado cesar de que dicho desplazamiento viene 
+//indicado por el valor numérico asociado a uno de los caracteres que forma la palabra
+
+//Todavía tiene errores porque no funciona bien al poner signos de interrogación
+
+
+
+import java.util.Scanner;
+
+public class Cifrado_de_Vigenere
+{
+    public static void main(String[]argumento)
+    {
+        Scanner leer = new Scanner(System.in);
+        String cadena;
+        char opc;
+        do{
+        System.out.println("Escoge una opccion"+"\n1.-Cifrar Mensaje"+"\n2.-Descifrar Mensaje"+"\n0.-Salir");
+        opc=leer.nextLine().charAt(0);
+        
+        if(opc=='1'){
+                System.out.println("Introduce el mensaje a cifrar");
+                cadena=leer.nextLine();
+                System.out.println(Cifrar(cadena));
+            }
+        else if(opc=='2'){
+                System.out.println("Introduce el mensaje a descifrar");
+                cadena=leer.nextLine();
+                System.out.println(Descifrar(cadena));
+                }
+        }while(opc!='0');
+        
+    }
+    
+    //Función para cifrar el mensaje:
+    //Envío el String con el mensaje a cifrar, pido en esta función una clave por teclado, y devuelvo a la función main el mensaje descifrado mediante un String
+    public  static String Cifrar(String Mensaje)
+    {
+        String salida="";
+        String Abcedario="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ.,¿?";
+        
+        char []Abecedario = Abcedario.toCharArray (); //En este array meto el abecedario para poder mostrar la suma después
+        
+        //Pido la clave por teclado:
+        System.out.println ("Introduce la clave de cifrado: ");
+        Scanner clavemensaje = new Scanner (System.in);
+        String clave=clavemensaje.nextLine ();
+        
+       //String clave="LOUP";
+       char []claveEquiv=new char [Mensaje.length()];
+       char []Msj=Mensaje.toUpperCase().toCharArray();
+       int cont=0;
+       for(int c=0;c<Mensaje.length();c++)
+       {
+           
+           if(Mensaje.charAt(c)==' ')
+           {
+               c++;
+           }
+           claveEquiv[c]=clave.charAt(cont);
+           cont++;
+           
+           //Dicho de alguna forma, reinicia la clave
+           if(cont==clave.length())
+           {
+               cont=0;
+           }
+       }
+       int x=0,y=0,z;
+       for(int c=0;c<Mensaje.length();c++)
+       {
+           if(Mensaje.charAt(c)==' ')
+           {
+               salida+=" ";
+               c++;
+           }
+           for(int f=0;f<Abcedario.length();f++)
+           {
+               if(Msj[c]==Abcedario.charAt(f))
+               {
+                   x=f;
+                   
+               }
+               if(claveEquiv[c]==Abcedario.charAt(f))
+               {
+                   y=f;
+                   
+               }
+               
+               
+           }
+           z=(x+y)%31;
+           
+           
+           
+           //LA INTENCION ES MOSTRAR POR PANTALLA LA SUMA EN MODULO 27 PARA VER FACILMENTE COMO CIFRA EL MENSAJE
+           System.out.println (Abecedario[x] + " + " + Abecedario[y] + " = " + x + " + " + y + " mod 31  = " + z +" = " + Abecedario[z]);
+           
+           salida+=Abcedario.charAt(z);
+           
+           
+           
+       }
+       
+       return salida;
+    }
+    public static String Descifrar(String Mensaje)
+    {
+        String salida="";
+        String Abcedario="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ.,¿?";
+        
+        //Pido la clave por teclado
+        System.out.println ("Introduce la clave para descifrar el mensaje: ");
+        Scanner clavemensaje = new Scanner (System.in);
+        String clave=clavemensaje.nextLine ();
+       
+        //String clave="SI";
+       char []claveEquiv=new char [Mensaje.length()];
+       char []Msg=Mensaje.toUpperCase().toCharArray();
+       int cont=0;
+       for(int c=0;c<Mensaje.length();c++)
+       {
+           
+           if(Mensaje.charAt(c)==' ')
+           {
+               c++;
+           }
+           claveEquiv[c]=clave.charAt(cont);
+           cont++;
+           if(cont==clave.length())
+           {
+               cont=0;
+           }
+       }
+       cont=0;
+       int x=0,y=0,z,t;
+       for(int c=0;c<Mensaje.length();c++)
+       {
+           if(Mensaje.charAt(c)==' ')
+           {
+               salida+=" ";
+               c++;
+           }
+           for(int f=0;f<Abcedario.length();f++)
+           {
+               if(Msg[c]==Abcedario.charAt(f))
+               {
+                   x=f;
+                   
+               }
+               if(claveEquiv[c]==Abcedario.charAt(f))
+               {
+                   y=f;
+                   
+               }
+               
+               
+           }
+           z=(y-x);
+           
+           if(z<=0)
+           {
+               if(z==0)
+               {
+                   salida+="A";
+               }
+               else
+               {
+               for(int j=1;j<=Abcedario.length();j++)
+               {
+                cont++;
+                if(cont==(z*-1))
+                {
+                    salida+=Abcedario.charAt(j);
+                    break;
+                }
+               }    
+               }
+               
+           }else{
+               for(int i=30;i>=0;i--)
+                {
+                    cont++;
+                    if(cont==z)
+                    {
+                       salida+=Abcedario.charAt(i); 
+                       break;
+                    }
+                }
+           }
+                
+                cont=0;
+           
+       }
+       
+       return salida;
+    }
+}
